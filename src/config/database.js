@@ -1,4 +1,5 @@
-import 'dotenv/config';
+require('dotenv/config');
+
 module.exports = {
   dialect: 'postgres',
   host: process.env.APP_DBHOST,
