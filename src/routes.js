@@ -48,5 +48,6 @@ routes.get(
 );
 routes.post('/packages', adminMiddleware, PackageController.store);
 routes.put('/packages', adminMiddleware, PackageController.update);
+routes.delete('/packages/:id', adminMiddleware, PackageController.delete);
 
 export default routes;

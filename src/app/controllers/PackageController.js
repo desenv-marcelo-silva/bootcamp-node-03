@@ -73,7 +73,10 @@ class PackageController {
     }
     const packages = await Package.findByPk(req.body.id);
     if (!packages) {
-      return Error.BadRequest(res, 'Encomenda inválida!');
+      return Error.BadRequest(
+        res,
+        'Encomenda não encontrada na base de dados.'
+      );
     }
 
     const recipient = await Recipient.findByPk(req.body.recipient_id);
@@ -89,6 +92,25 @@ class PackageController {
     const { id, product } = await packages.update(req.body);
 
     return res.json({ id, product });
+  }
+
+  async delete(req, res) {
+    const { id } = req.params;
+    if (!id) {
+      return Error.BadRequest(res, 'Encomenda inválida.');
+    }
+
+    const packages = await Package.findByPk(id);
+    if (!packages) {
+      return Error.BadRequest(
+        res,
+        'Encomenda não encontrada na base de dados.'
+      );
+    }
+
+    await packages.destroy();
+
+    return res.json({});
   }
 }
 
