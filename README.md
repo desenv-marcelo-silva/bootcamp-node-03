@@ -129,11 +129,11 @@ Exemplo de requisição: `DELETE https://fastfeet.com/problem/1/cancel-delivery`
 
 Quando uma encomenda for cancelada, o entregador deve receber um e-mail informando-o sobre o cancelamento.
 
-## **📅 Entrega**
+## **📅Entrega**
 
 Esse desafio está no Github para consultas futuras e também como forma de mostrar habilidades que foram adquiridas neste período.
 
-## **📝 Licença**
+## **📝Licença**
 
 Esse projeto está sob a licença MIT. Veja o arquivo [LICENSE](https://github.com/Rocketseat/bootcamp-gostack-desafio-03/blob/master/LICENSE.md) para mais detalhes.
 
