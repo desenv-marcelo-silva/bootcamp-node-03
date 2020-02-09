@@ -2,8 +2,22 @@ import * as Yup from 'yup';
 
 import * as Error from '../util/Error';
 import Delivermen from '../models/Delivermen';
+import File from '../models/File';
 
 class DelivermanController {
+  async index(req, res) {
+    const delivermen = await Delivermen.findAll({
+      attributes: ['id', 'name', 'email'],
+      order: ['name'],
+      include: {
+        model: File,
+        as: 'avatar',
+        attributes: ['id', 'path', 'url'],
+      },
+    });
+    return res.json(delivermen);
+  }
+
   async store(req, res) {
     const schema = Yup.object().shape({
       name: Yup.string().required(),

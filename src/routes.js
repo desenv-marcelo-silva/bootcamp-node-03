@@ -27,6 +27,7 @@ routes.post('/files', upload.single('file'), FileController.store);
 routes.post('/recipients', adminMiddleware, RecipientController.store);
 routes.put('/recipients', adminMiddleware, RecipientController.update);
 
+routes.get('/delivermen', adminMiddleware, DelivermanController.index);
 routes.post('/delivermen', adminMiddleware, DelivermanController.store);
 routes.put(
   '/delivermen/:delivermanId',
