@@ -52,10 +52,41 @@ class PackageController {
     const deliveryman = await Delivermen.findByPk(req.body.deliveryman_id);
 
     if (!deliveryman) {
-      return Error.BadRequest(res, 'Destinatário inválido.');
+      return Error.BadRequest(res, 'Entregador inválido.');
     }
 
     const { id, product } = await Package.create(req.body);
+
+    return res.json({ id, product });
+  }
+
+  async update(req, res) {
+    const schema = Yup.object().shape({
+      id: Yup.number().required(),
+      product: Yup.string(),
+      recipient_id: Yup.number().required(),
+      deliveryman_id: Yup.number().required(),
+    });
+
+    if (!(await schema.isValid(req.body))) {
+      return Error.BadRequest(res, 'Dados inválidos.');
+    }
+    const packages = await Package.findByPk(req.body.id);
+    if (!packages) {
+      return Error.BadRequest(res, 'Encomenda inválida!');
+    }
+
+    const recipient = await Recipient.findByPk(req.body.recipient_id);
+    if (!recipient) {
+      return Error.BadRequest(res, 'Destinatário inválido.');
+    }
+
+    const deliveryman = await Delivermen.findByPk(req.body.deliveryman_id);
+    if (!deliveryman) {
+      return Error.BadRequest(res, 'Entregador inválido.');
+    }
+
+    const { id, product } = await packages.update(req.body);
 
     return res.json({ id, product });
   }

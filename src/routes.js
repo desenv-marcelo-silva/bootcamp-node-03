@@ -47,5 +47,6 @@ routes.get(
   PackageController.index
 );
 routes.post('/packages', adminMiddleware, PackageController.store);
+routes.put('/packages', adminMiddleware, PackageController.update);
 
 export default routes;
