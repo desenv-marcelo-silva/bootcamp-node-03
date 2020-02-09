@@ -1,3 +1,5 @@
+import * as Yup from 'yup';
+
 import * as Error from '../util/Error';
 
 import Package from '../models/Package';
@@ -29,6 +31,33 @@ class PackageController {
     });
 
     return res.json(packages);
+  }
+
+  async store(req, res) {
+    const schema = Yup.object().shape({
+      product: Yup.string().required(),
+      recipient_id: Yup.number().required(),
+      deliveryman_id: Yup.number().required(),
+    });
+
+    if (!(await schema.isValid(req.body))) {
+      return Error.BadRequest(res, 'Dados inválidos.');
+    }
+
+    const recipient = await Recipient.findByPk(req.body.recipient_id);
+    if (!recipient) {
+      return Error.BadRequest(res, 'Destinatário inválido.');
+    }
+
+    const deliveryman = await Delivermen.findByPk(req.body.deliveryman_id);
+
+    if (!deliveryman) {
+      return Error.BadRequest(res, 'Destinatário inválido.');
+    }
+
+    const { id, product } = await Package.create(req.body);
+
+    return res.json({ id, product });
   }
 }
 
