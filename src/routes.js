@@ -8,6 +8,7 @@ import SessionController from './app/controllers/SessionController';
 import RecipientController from './app/controllers/RecipientController';
 import FileController from './app/controllers/FileController';
 import DelivermanController from './app/controllers/DelivermanController';
+import PackageController from './app/controllers/PackageController';
 
 import authMiddleware from './app/middlewares/auth';
 import adminMiddleware from './app/middlewares/admin';
@@ -38,6 +39,12 @@ routes.delete(
   '/delivermen/:delivermanId',
   adminMiddleware,
   DelivermanController.delete
+);
+
+routes.get(
+  '/packages/:deliverymanId',
+  adminMiddleware,
+  PackageController.index
 );
 
 export default routes;
