@@ -16,7 +16,7 @@ class UserController {
     });
 
     if (!(await schema.isValid(req.body))) {
-      return Error.BadRequest(res, 'Dados inválidos.' );
+      return Error.BadRequest(res, 'Dados inválidos.');
     }
 
     const userExists = await User.findOne({ where: { email: req.body.email } });
@@ -50,7 +50,7 @@ class UserController {
     });
 
     if (!(await schema.isValid(req.body))) {
-      return Error.BadRequest(res, 'Dados inválidos.' );
+      return Error.BadRequest(res, 'Dados inválidos.');
     }
 
     const { email, oldPassword } = req.body;
