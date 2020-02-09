@@ -7,6 +7,7 @@ import UserController from './app/controllers/UserControllers';
 import SessionController from './app/controllers/SessionController';
 import RecipientController from './app/controllers/RecipientController';
 import FileController from './app/controllers/FileController';
+import DelivermanController from './app/controllers/DelivermanController';
 
 import authMiddleware from './app/middlewares/auth';
 
@@ -24,5 +25,7 @@ routes.put('/recipients', RecipientController.update);
 routes.put('/users', UserController.update);
 
 routes.post('/files', upload.single('file'), FileController.store);
+
+routes.post('/delivermen', DelivermanController.store);
 
 export default routes;
