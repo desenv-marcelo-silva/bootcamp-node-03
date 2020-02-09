@@ -32,6 +32,33 @@ class DelivermanController {
       email,
     });
   }
+
+  async update(req, res) {
+    const { delivermanId } = req.params;
+
+    const schema = Yup.object().shape({
+      name: Yup.string(),
+      email: Yup.string().email(),
+    });
+
+    if (!delivermanId || !(await schema.isValid(req.body))) {
+      Error.BadRequest(res, 'Dados inválidos.');
+    }
+
+    const deliverman = await Delivermen.findByPk(delivermanId);
+
+    if (!deliverman) {
+      return Error.BadRequest(res, 'Entregador não existe na base de dados.');
+    }
+
+    const { id, name, email } = await deliverman.update(req.body);
+
+    return res.json({
+      id,
+      name,
+      email,
+    });
+  }
 }
 
 export default new DelivermanController();

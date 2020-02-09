@@ -10,6 +10,7 @@ import FileController from './app/controllers/FileController';
 import DelivermanController from './app/controllers/DelivermanController';
 
 import authMiddleware from './app/middlewares/auth';
+import adminMiddleware from './app/middlewares/admin';
 
 const routes = new Router();
 const upload = multer(multerConfig);
@@ -19,13 +20,18 @@ routes.post('/sessions', SessionController.store);
 
 routes.use(authMiddleware);
 
-routes.post('/recipients', RecipientController.store);
-routes.put('/recipients', RecipientController.update);
-
 routes.put('/users', UserController.update);
 
 routes.post('/files', upload.single('file'), FileController.store);
 
-routes.post('/delivermen', DelivermanController.store);
+routes.post('/recipients', adminMiddleware, RecipientController.store);
+routes.put('/recipients', adminMiddleware, RecipientController.update);
+
+routes.post('/delivermen', adminMiddleware, DelivermanController.store);
+routes.put(
+  '/delivermen/:delivermanId',
+  adminMiddleware,
+  DelivermanController.update
+);
 
 export default routes;
