@@ -59,6 +59,24 @@ class DelivermanController {
       email,
     });
   }
+
+  async delete(req, res) {
+    const { delivermanId } = req.params;
+
+    if (!delivermanId) {
+      Error.BadRequest(res, 'Dados inválidos.');
+    }
+
+    const deliverman = await Delivermen.findByPk(delivermanId);
+
+    if (!deliverman) {
+      return Error.BadRequest(res, 'Entregador não existe na base de dados.');
+    }
+
+    await deliverman.destroy();
+
+    return res.json({});
+  }
 }
 
 export default new DelivermanController();

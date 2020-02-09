@@ -33,5 +33,10 @@ routes.put(
   adminMiddleware,
   DelivermanController.update
 );
+routes.delete(
+  '/delivermen/:delivermanId',
+  adminMiddleware,
+  DelivermanController.delete
+);
 
 export default routes;
