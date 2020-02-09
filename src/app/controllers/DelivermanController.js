@@ -24,9 +24,13 @@ class DelivermanController {
       return Error.BadRequest(res, 'Entregador já cadastrado.');
     }
 
-    const delivermen = await Delivermen.create(req.body);
+    const { id, name, email } = await Delivermen.create(req.body);
 
-    return res.json(delivermen);
+    return res.json({
+      id,
+      name,
+      email,
+    });
   }
 }
 
