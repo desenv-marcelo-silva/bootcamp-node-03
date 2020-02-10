@@ -11,7 +11,7 @@ class DelivermanController {
       order: ['name'],
       include: {
         model: File,
-        as: 'avatar',
+        as: 'deliveryman_avatar',
         attributes: ['id', 'path', 'url'],
       },
     });
