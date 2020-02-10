@@ -61,7 +61,7 @@ class PackageController {
     await Mail.sendMail({
       to: `to: ${deliveryman.email} <${deliveryman.email}>`,
       subject: 'Entrega cadastrada',
-      text: 'Você tem uma nova entrega cadastrada. Verifique.',
+      text: `Você tem uma nova entrega cadastrada. Verifique sobre o produto: ${product}`,
     });
 
     return res.json({ id, product });
