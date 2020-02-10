@@ -1,8 +1,8 @@
+import * as Yup from 'yup';
 import Recipient from '../models/Recipient';
 
-import * as Yup from 'yup';
-
 import * as Error from '../util/Error';
+
 const CEPRegex = /^[0-9]{2}.[0-9]{3}-[0-9]{3}$/;
 
 class RecipientController {
@@ -18,7 +18,7 @@ class RecipientController {
     });
 
     if (!(await schema.isValid(req.body))) {
-      return Error.BadRequest(res, 'Dados inválidos.' );
+      return Error.BadRequest(res, 'Dados inválidos.');
     }
 
     const { name } = req.body;
@@ -44,7 +44,7 @@ class RecipientController {
     });
 
     if (!(await schema.isValid(req.body))) {
-      return Error.BadRequest(res, 'Dados inválidos.' );
+      return Error.BadRequest(res, 'Dados inválidos.');
     }
 
     const recipient = await Recipient.findByPk(req.body.id);
