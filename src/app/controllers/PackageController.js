@@ -5,6 +5,7 @@ import * as Error from '../util/Error';
 import Package from '../models/Package';
 import Recipient from '../models/Recipient';
 import Delivermen from '../models/Delivermen';
+import Mail from '../../lib/Mail';
 
 class PackageController {
   async index(req, res) {
@@ -56,6 +57,12 @@ class PackageController {
     }
 
     const { id, product } = await Package.create(req.body);
+
+    await Mail.sendMail({
+      to: `to: ${deliveryman.email} <${deliveryman.email}>`,
+      subject: 'Entrega cadastrada',
+      text: 'Você tem uma nova entrega cadastrada. Verifique.',
+    });
 
     return res.json({ id, product });
   }
