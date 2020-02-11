@@ -60,7 +60,7 @@ class PackageController {
 
     await Notification.create({
       content: `Nova entrega cadastrada`,
-      deliveryman: req.body.deliveryman_id,
+      deliveryman_id: req.body.deliveryman_id,
     });
 
     return res.json({ id, product });
