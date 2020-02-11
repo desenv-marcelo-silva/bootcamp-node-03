@@ -6,6 +6,8 @@ import Package from '../models/Package';
 import Recipient from '../models/Recipient';
 import Delivermen from '../models/Delivermen';
 import Notification from '../models/schemas/notification';
+import WarningMail from '../jobs/WarningMail';
+import Queue from '../../lib/Queue';
 
 class PackageController {
   async index(req, res) {
@@ -56,11 +58,17 @@ class PackageController {
       return Error.BadRequest(res, 'Entregador inválido.');
     }
 
-    const { id, product } = await Package.create(req.body);
+    const { id, product, created_at } = await Package.create(req.body);
 
     await Notification.create({
       content: `Nova entrega cadastrada`,
       deliveryman_id: req.body.deliveryman_id,
+    });
+
+    await Queue.add(WarningMail.key, {
+      deliveryman,
+      product,
+      created_at,
     });
 
     return res.json({ id, product });
