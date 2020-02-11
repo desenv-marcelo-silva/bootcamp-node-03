@@ -23,7 +23,7 @@ class Package extends Model {
       as: 'signature',
     });
     this.belongsTo(models.Recipient, { foreignKey: 'recipient_id' });
-    this.belongsTo(models.Delivermen, { foreignKey: 'deliveryman_id' });
+    this.belongsTo(models.Deliveryman, { foreignKey: 'deliveryman_id' });
   }
 }
 

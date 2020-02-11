@@ -4,7 +4,7 @@ import * as Error from '../util/Error';
 
 import Package from '../models/Package';
 import Recipient from '../models/Recipient';
-import Delivermen from '../models/Delivermen';
+import Deliveryman from '../models/Deliveryman';
 import Notification from '../models/schemas/notification';
 import WarningMail from '../jobs/WarningMail';
 import Queue from '../../lib/Queue';
@@ -27,7 +27,7 @@ class PackageController {
           attributes: ['name'],
         },
         {
-          model: Delivermen,
+          model: Deliveryman,
           attributes: ['name'],
         },
       ],
@@ -52,7 +52,7 @@ class PackageController {
       return Error.BadRequest(res, 'Destinatário inválido.');
     }
 
-    const deliveryman = await Delivermen.findByPk(req.body.deliveryman_id);
+    const deliveryman = await Deliveryman.findByPk(req.body.deliveryman_id);
 
     if (!deliveryman) {
       return Error.BadRequest(res, 'Entregador inválido.');
@@ -98,7 +98,7 @@ class PackageController {
       return Error.BadRequest(res, 'Destinatário inválido.');
     }
 
-    const deliveryman = await Delivermen.findByPk(req.body.deliveryman_id);
+    const deliveryman = await Deliveryman.findByPk(req.body.deliveryman_id);
     if (!deliveryman) {
       return Error.BadRequest(res, 'Entregador inválido.');
     }

@@ -1,12 +1,12 @@
 import * as Yup from 'yup';
 
 import * as Error from '../util/Error';
-import Delivermen from '../models/Delivermen';
+import Deliveryman from '../models/Deliveryman';
 import File from '../models/File';
 
-class DelivermanController {
+class DeliverymanController {
   async index(req, res) {
-    const delivermen = await Delivermen.findAll({
+    const deliveryman = await Deliveryman.findAll({
       attributes: ['id', 'name', 'email'],
       order: ['name'],
       include: {
@@ -15,7 +15,7 @@ class DelivermanController {
         attributes: ['id', 'path', 'url'],
       },
     });
-    return res.json(delivermen);
+    return res.json(deliveryman);
   }
 
   async store(req, res) {
@@ -30,15 +30,15 @@ class DelivermanController {
       Error.BadRequest(res, 'Dados inválidos.');
     }
 
-    const delivermanExists = await Delivermen.findOne({
+    const deliverymanExists = await Deliveryman.findOne({
       where: { email: req.body.email },
     });
 
-    if (delivermanExists) {
+    if (deliverymanExists) {
       return Error.BadRequest(res, 'Entregador já cadastrado.');
     }
 
-    const { id, name, email } = await Delivermen.create(req.body);
+    const { id, name, email } = await Deliveryman.create(req.body);
 
     return res.json({
       id,
@@ -48,24 +48,24 @@ class DelivermanController {
   }
 
   async update(req, res) {
-    const { delivermanId } = req.params;
+    const { deliverymanId } = req.params;
 
     const schema = Yup.object().shape({
       name: Yup.string(),
       email: Yup.string().email(),
     });
 
-    if (!delivermanId || !(await schema.isValid(req.body))) {
+    if (!deliverymanId || !(await schema.isValid(req.body))) {
       Error.BadRequest(res, 'Dados inválidos.');
     }
 
-    const deliverman = await Delivermen.findByPk(delivermanId);
+    const deliverymanId = await Deliveryman.findByPk(deliverymanId);
 
-    if (!deliverman) {
+    if (!deliverymanId) {
       return Error.BadRequest(res, 'Entregador não existe na base de dados.');
     }
 
-    const { id, name, email } = await deliverman.update(req.body);
+    const { id, name, email } = await deliveryman.update(req.body);
 
     return res.json({
       id,
@@ -75,22 +75,22 @@ class DelivermanController {
   }
 
   async delete(req, res) {
-    const { delivermanId } = req.params;
+    const { deliverymanId } = req.params;
 
-    if (!delivermanId) {
+    if (!deliverymanId) {
       Error.BadRequest(res, 'Dados inválidos.');
     }
 
-    const deliverman = await Delivermen.findByPk(delivermanId);
+    const deliveryman = await Deliveryman.findByPk(deliverymanId);
 
-    if (!deliverman) {
+    if (!deliveryman) {
       return Error.BadRequest(res, 'Entregador não existe na base de dados.');
     }
 
-    await deliverman.destroy();
+    await deliveryman.destroy();
 
     return res.json({});
   }
 }
 
-export default new DelivermanController();
+export default new DeliverymanController();

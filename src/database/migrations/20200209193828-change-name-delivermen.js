@@ -1,9 +1,9 @@
 module.exports = {
   up: queryInterface => {
-    return queryInterface.renameTable('delivermen', 'delivermens');
+    return queryInterface.renameTable('deliveryman', 'delivermens');
   },
 
   down: queryInterface => {
-    return queryInterface.renameTable('delivermens', 'delivermen');
+    return queryInterface.renameTable('deliveryman', 'delivermen');
   },
 };

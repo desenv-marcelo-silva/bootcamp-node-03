@@ -4,12 +4,12 @@ import mongoose from 'mongoose';
 import User from '../app/models/User';
 import Recipient from '../app/models/Recipient';
 import File from '../app/models/File';
-import Delivermen from '../app/models/Delivermen';
+import Deliveryman from '../app/models/Deliveryman';
 import Package from '../app/models/Package';
 
 import databaseConfig from '../config/database';
 
-const models = [User, Recipient, File, Delivermen, Package];
+const models = [User, Recipient, File, Deliveryman, Package];
 
 class Database {
   constructor() {

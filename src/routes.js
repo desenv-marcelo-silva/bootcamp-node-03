@@ -7,7 +7,7 @@ import UserController from './app/controllers/UserControllers';
 import SessionController from './app/controllers/SessionController';
 import RecipientController from './app/controllers/RecipientController';
 import FileController from './app/controllers/FileController';
-import DelivermanController from './app/controllers/DelivermanController';
+import DeliverymanController from './app/controllers/DeliverymanController';
 import PackageController from './app/controllers/PackageController';
 
 import authMiddleware from './app/middlewares/auth';
@@ -28,17 +28,17 @@ routes.post('/files', upload.single('file'), FileController.store);
 routes.post('/recipients', adminMiddleware, RecipientController.store);
 routes.put('/recipients', adminMiddleware, RecipientController.update);
 
-routes.get('/delivermen', adminMiddleware, DelivermanController.index);
-routes.post('/delivermen', adminMiddleware, DelivermanController.store);
+routes.get('/deliveryman', adminMiddleware, DeliverymanController.index);
+routes.post('/deliveryman', adminMiddleware, DeliverymanController.store);
 routes.put(
-  '/delivermen/:delivermanId',
+  '/deliveryman/:deliverymanId',
   adminMiddleware,
-  DelivermanController.update
+  DeliverymanController.update
 );
 routes.delete(
-  '/delivermen/:delivermanId',
+  '/deliveryman/:deliverymanId',
   adminMiddleware,
-  DelivermanController.delete
+  DeliverymanController.delete
 );
 
 routes.get(

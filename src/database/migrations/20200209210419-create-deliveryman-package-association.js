@@ -3,7 +3,7 @@ module.exports = {
     return queryInterface.addConstraint('packages', ['deliveryman_id'], {
       type: 'foreign key',
       references: {
-        table: 'delivermens',
+        table: 'deliverymans',
         field: 'id',
       },
       onDelete: 'CASCADE',
@@ -14,7 +14,7 @@ module.exports = {
   down: queryInterface => {
     return queryInterface.removeConstraint(
       'packages',
-      'packages_deliveryman_id_delivermens_fk'
+      'packages_deliveryman_id_deliverymans_fk'
     );
   },
 };
