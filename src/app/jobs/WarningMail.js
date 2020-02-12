@@ -10,7 +10,7 @@ class WaringMail {
     await Mail.sendMail({
       to: `to: ${deliveryman.email} <${deliveryman.email}>`,
       subject: 'Nova entrega cadastrada',
-      template: 'warning.hbs',
+      template: 'warning',
       context: {
         deliveryman: deliveryman.name,
         product,
