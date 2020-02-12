@@ -59,9 +59,9 @@ class DeliverymanController {
       Error.BadRequest(res, 'Dados inválidos.');
     }
 
-    const deliverymanId = await Deliveryman.findByPk(deliverymanId);
+    const deliveryman = await Deliveryman.findByPk(deliverymanId);
 
-    if (!deliverymanId) {
+    if (!deliveryman) {
       return Error.BadRequest(res, 'Entregador não existe na base de dados.');
     }
 

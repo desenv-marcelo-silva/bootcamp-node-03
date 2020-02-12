@@ -5,7 +5,7 @@ import * as Error from '../util/Error';
 import Package from '../models/Package';
 import Recipient from '../models/Recipient';
 import Deliveryman from '../models/Deliveryman';
-import Notification from '../models/schemas/notification';
+import Notification from '../models/schemas/Notification';
 import WarningMail from '../jobs/WarningMail';
 import Queue from '../../lib/Queue';
 
