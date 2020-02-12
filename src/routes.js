@@ -29,6 +29,11 @@ routes.get(
   DeliveryPackController.delivered
 );
 
+routes.post(
+  '/deliverypacks/:deliveryman_id/checkout',
+  DeliveryPackController.checkout
+);
+
 routes.use(authMiddleware);
 
 routes.put('/users', UserController.update);

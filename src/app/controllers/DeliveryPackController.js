@@ -1,4 +1,5 @@
 import { Op } from 'sequelize';
+import { startOfDay, endOfDay, isBefore, isAfter, startOfHour } from 'date-fns';
 
 import Deliveryman from '../models/Deliveryman';
 import Package from '../models/Package';
@@ -51,6 +52,64 @@ class DeliveryPackController {
     });
 
     return res.json(packagesDelivered);
+  }
+
+  async checkout(req, res) {
+    const { deliveryman_id } = req.params;
+
+    if (!deliveryman_id) {
+      return Error.BadRequest(res, 'Entregador inválido!');
+    }
+
+    const { package_id } = req.body;
+    if (!package_id) {
+      return Error.BadRequest(res, 'Parâmetros inválidos.');
+    }
+
+    const hoje = new Date();
+    const agora = new Date().getHours();
+
+    if (isBefore(agora, startOfHour(hoje.setHours(8)))) {
+      return Error.BadRequest(
+        res,
+        'Retiradas podem ser feitas somente a partir das 8h.'
+      );
+    }
+
+    if (isAfter(startOfHour(hoje.setHours(18)), agora)) {
+      return Error.BadRequest(
+        res,
+        'Retiradas podem ser feitas somente até às 18h.'
+      );
+    }
+
+    const deliveryman = await Deliveryman.findByPk(deliveryman_id);
+    if (!deliveryman) {
+      return Error.BadRequest(res, 'Entregador inválido!');
+    }
+
+    const countDeliveries = await Package.count({
+      where: {
+        deliveryman_id,
+        start_date: { [Op.gte]: startOfDay(hoje), [Op.lte]: endOfDay(hoje) },
+      },
+    });
+    if (countDeliveries + 1 > 5) {
+      return Error.BadRequest(
+        res,
+        'Somente 5 retiradas são permitidas por dia.'
+      );
+    }
+
+    const packageToDelivery = await Package.findByPk(package_id);
+    if (!packageToDelivery) {
+      return Error.BadRequest(res, 'Entrega não existe na base.');
+    }
+
+    packageToDelivery.start_date = hoje;
+
+    await packageToDelivery.update();
+    return res.json(packageToDelivery);
   }
 }
 
