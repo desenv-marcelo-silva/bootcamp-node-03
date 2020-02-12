@@ -106,10 +106,52 @@ class DeliveryPackController {
       return Error.BadRequest(res, 'Entrega não existe na base.');
     }
 
+    if (packageToDelivery.deliveryman_id !== deliveryman_id) {
+      return Error.BadRequest(
+        res,
+        'Retirada não permitida para este entregador.'
+      );
+    }
+
     packageToDelivery.start_date = hoje;
 
     await packageToDelivery.update();
     return res.json(packageToDelivery);
+  }
+
+  async delivery(req, res) {
+    const { deliveryman_id } = req.params;
+
+    if (!deliveryman_id) {
+      return Error.BadRequest(res, 'Entregador inválido!');
+    }
+
+    const { package_id } = req.body;
+    if (!package_id) {
+      return Error.BadRequest(res, 'Parâmetros inválidos.');
+    }
+
+    const deliveryman = await Deliveryman.findByPk(deliveryman_id);
+    if (!deliveryman) {
+      return Error.BadRequest(res, 'Entregador inválido!');
+    }
+
+    const packageDelivered = await Package.findByPk(package_id);
+    if (!packageDelivered) {
+      return Error.BadRequest(res, 'Entrega não existe na base.');
+    }
+
+    if (packageDelivered.deliveryman_id !== Number(deliveryman_id)) {
+      return Error.BadRequest(
+        res,
+        'Entrega não permitida para este entregador.'
+      );
+    }
+
+    packageDelivered.end_date = new Date();
+
+    await packageDelivered.update();
+    return res.json(packageDelivered);
   }
 }
 
