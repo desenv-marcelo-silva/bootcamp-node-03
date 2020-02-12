@@ -24,6 +24,11 @@ routes.get(
   DeliveryPackController.deliveries
 );
 
+routes.get(
+  '/deliverypacks/:deliveryman_id/delivered',
+  DeliveryPackController.delivered
+);
+
 routes.use(authMiddleware);
 
 routes.put('/users', UserController.update);

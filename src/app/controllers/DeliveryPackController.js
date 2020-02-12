@@ -1,3 +1,5 @@
+import { Op } from 'sequelize';
+
 import Deliveryman from '../models/Deliveryman';
 import Package from '../models/Package';
 import Recipient from '../models/Recipient';
@@ -26,6 +28,29 @@ class DeliveryPackController {
     });
 
     return res.json(packagesDeliveryman);
+  }
+
+  async delivered(req, res) {
+    const { deliveryman_id } = req.params;
+    if (!deliveryman_id) {
+      return Error.BadRequest(res, 'Entregador inválido!');
+    }
+
+    const deliveryman = await Deliveryman.findByPk(deliveryman_id);
+    if (!deliveryman) {
+      return Error.BadRequest(res, 'Entregador inválido!');
+    }
+
+    const packagesDelivered = await Package.findAll({
+      where: { deliveryman_id, canceled_at: null, end_date: { [Op.ne]: null } },
+      attributes: ['id', 'product'],
+      include: {
+        model: Recipient,
+        attributes: ['name', 'bairro', 'cidade'],
+      },
+    });
+
+    return res.json(packagesDelivered);
   }
 }
 
