@@ -10,6 +10,7 @@ import FileController from './app/controllers/FileController';
 import DeliverymanController from './app/controllers/DeliverymanController';
 import PackageController from './app/controllers/PackageController';
 import DeliveryPackController from './app/controllers/DeliveryPackController';
+import DeliveryProblemsController from './app/controllers/DeliveryProblemsController';
 
 import authMiddleware from './app/middlewares/auth';
 import adminMiddleware from './app/middlewares/admin';
@@ -39,35 +40,29 @@ routes.post(
   DeliveryPackController.delivery
 );
 
+routes.get(
+  '/deliveryproblems/:package_id/problems',
+  DeliveryProblemsController.problems
+);
+
 routes.use(authMiddleware);
 
 routes.put('/users', UserController.update);
 
 routes.post('/files', upload.single('file'), FileController.store);
 
-routes.post('/recipients', adminMiddleware, RecipientController.store);
-routes.put('/recipients', adminMiddleware, RecipientController.update);
+routes.use(adminMiddleware);
+routes.post('/recipients', RecipientController.store);
+routes.put('/recipients', RecipientController.update);
 
-routes.get('/deliveryman', adminMiddleware, DeliverymanController.index);
-routes.post('/deliveryman', adminMiddleware, DeliverymanController.store);
-routes.put(
-  '/deliveryman/:deliverymanId',
-  adminMiddleware,
-  DeliverymanController.update
-);
-routes.delete(
-  '/deliveryman/:deliverymanId',
-  adminMiddleware,
-  DeliverymanController.delete
-);
+routes.get('/deliveryman', DeliverymanController.index);
+routes.post('/deliveryman', DeliverymanController.store);
+routes.put('/deliveryman/:deliverymanId', DeliverymanController.update);
+routes.delete('/deliveryman/:deliverymanId', DeliverymanController.delete);
 
-routes.get(
-  '/packages/:deliverymanId',
-  adminMiddleware,
-  PackageController.index
-);
-routes.post('/packages', adminMiddleware, PackageController.store);
-routes.put('/packages', adminMiddleware, PackageController.update);
-routes.delete('/packages/:id', adminMiddleware, PackageController.delete);
+routes.get('/packages/:deliverymanId', PackageController.index);
+routes.post('/packages', PackageController.store);
+routes.put('/packages', PackageController.update);
+routes.delete('/packages/:id', PackageController.delete);
 
 export default routes;
