@@ -150,7 +150,13 @@ class DeliveryPackController {
 
     packageDelivered.end_date = new Date();
 
-    await packageDelivered.update();
+    const { signature_id } = req.body;
+    if (signature_id) {
+      packageDelivered.signature_id = signature_id;
+    }
+
+    await packageDelivered.save();
+
     return res.json(packageDelivered);
   }
 }
