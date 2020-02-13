@@ -108,6 +108,7 @@ class DeliveryProblemsController {
       where: {delivery_id: package_id},
       include: { 
         model: Package,
+        attributes: ['id'],
         include: { 
           model: Deliveryman,
           attributes: ['name', 'id'],
@@ -124,8 +125,9 @@ class DeliveryProblemsController {
     }
     const { product, name, enderecoReferencia } = deliveryProblem;
 
-    deliveryProblem.canceled_at = new Date();
-    const { delivery_id } = await deliveryProblem.save();
+    const cancelPackage = await Package.findByPk(deliveryProblem.Package.id);
+    cancelPackage.canceled_at = new Date();
+    const { id } = await cancelPackage.save();
 
     await Notification.create({
       content: `Entrega cancelada`,
@@ -138,7 +140,7 @@ class DeliveryProblemsController {
       enderecoReferencia,
     });
 
-    return res.json({delivery_id});
+    return res.json({id});
   }
 }
 
