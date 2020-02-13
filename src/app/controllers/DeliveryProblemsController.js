@@ -4,6 +4,9 @@ import Package from '../models/Package';
 import Recipient from '../models/Recipient';
 import Deliveryman from '../models/Deliveryman';
 import DeliveryProblems from '../models/DeliveryProblems';
+import Notification from '../models/schemas/Notification';
+import CancelMail from '../jobs/CancelMail';
+import Queue from '../../lib/Queue';
 
 import * as Error from '../util/Error';
 
@@ -100,13 +103,42 @@ class DeliveryProblemsController {
     if (!package_id) {
       return Error.BadRequest(res, 'Parâmetros inválidos.');
     }
-    const deliveryProblem = await DeliveryProblems.findByPk(package_id);
+
+    const deliveryProblem = await DeliveryProblems.findAll({
+      where: {delivery_id: package_id},
+      include: { 
+        model: Package,
+        include: { 
+          model: Deliveryman,
+          attributes: ['name', 'id'],
+          include: {
+            model: Recipient,
+            attributes: ['enderecoReferencia']
+          }
+        }
+      },
+    });
+
     if (!deliveryProblem) {
       return Error.BadRequest(res, 'Encomenda não encontrada');
     }
+    const { product, name, enderecoReferencia } = deliveryProblem;
 
-    deliveryProblem.destroy();
-    return res.json();
+    deliveryProblem.canceled_at = new Date();
+    const { delivery_id } = await deliveryProblem.save();
+
+    await Notification.create({
+      content: `Entrega cancelada`,
+      deliveryman_id: deliveryProblem.Deliveryman.id,
+    });
+
+    await Queue.add(CancelMail.key, {
+      name,
+      product,
+      enderecoReferencia,
+    });
+
+    return res.json({delivery_id});
   }
 }
 

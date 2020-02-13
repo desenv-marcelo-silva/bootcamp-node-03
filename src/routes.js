@@ -53,7 +53,7 @@ routes.get(
 );
 
 routes.delete(
-  '/deliveryproblems/:package_id',
+  '/deliveryproblems/:package_id/cancel-delivery',
   DeliveryProblemsController.delete
 );
 
