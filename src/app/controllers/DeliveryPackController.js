@@ -67,7 +67,7 @@ class DeliveryPackController {
     }
 
     const hoje = new Date();
-    const agora = new Date().getHours();
+    const agora = hoje.getHours();
 
     if (isBefore(agora, startOfHour(hoje.setHours(8)))) {
       return Error.BadRequest(
@@ -115,7 +115,8 @@ class DeliveryPackController {
 
     packageToDelivery.start_date = hoje;
 
-    await packageToDelivery.update();
+    await packageToDelivery.save();
+    
     return res.json(packageToDelivery);
   }
 
