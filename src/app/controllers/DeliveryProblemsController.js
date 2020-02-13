@@ -41,6 +41,30 @@ class DeliveryProblemsController {
     return res.json(deliveryProblems);
   }
 
+  async index(req, res) {
+    const packageProblems = await DeliveryProblems.findAll({
+      attributes: ['description'],
+      include: [
+        {
+          model: Package,
+          attributes: ['product'],
+          include: [
+            {
+              model: Recipient,
+              attributes: ['name'],
+            },
+            {
+              model: Deliveryman,
+              attributes: ['name'],
+            },
+          ],
+        },
+      ],
+    });
+
+    return res.json(packageProblems);
+  }
+
   async problems(req, res) {
     const { package_id } = req.params;
     if (!package_id) {
@@ -69,6 +93,20 @@ class DeliveryProblemsController {
     });
 
     return res.json(packageProblems);
+  }
+
+  async delete(req, res) {
+    const { package_id } = req.params;
+    if (!package_id) {
+      return Error.BadRequest(res, 'Parâmetros inválidos.');
+    }
+    const deliveryProblem = await DeliveryProblems.findByPk(package_id);
+    if (!deliveryProblem) {
+      return Error.BadRequest(res, 'Encomenda não encontrada');
+    }
+
+    deliveryProblem.destroy();
+    return res.json();
   }
 }
 

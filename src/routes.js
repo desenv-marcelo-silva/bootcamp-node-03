@@ -45,9 +45,16 @@ routes.post(
   DeliveryProblemsController.store
 );
 
+routes.get('/deliveryproblems', DeliveryProblemsController.index);
+
 routes.get(
-  '/deliveryproblems/:package_id/problems',
+  '/deliveryproblems/:package_id',
   DeliveryProblemsController.problems
+);
+
+routes.delete(
+  '/deliveryproblems/:package_id',
+  DeliveryProblemsController.delete
 );
 
 routes.use(authMiddleware);
