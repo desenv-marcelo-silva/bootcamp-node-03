@@ -40,6 +40,11 @@ routes.post(
   DeliveryPackController.delivery
 );
 
+routes.post(
+  '/deliveryproblems/:deliveryman_id/problems',
+  DeliveryProblemsController.store
+);
+
 routes.get(
   '/deliveryproblems/:package_id/problems',
   DeliveryProblemsController.problems
