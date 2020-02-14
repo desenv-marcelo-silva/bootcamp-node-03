@@ -46,11 +46,11 @@ class DeliveryProblemsController {
 
   async index(req, res) {
     const packageProblems = await DeliveryProblems.findAll({
-      attributes: ['description'],
+      attributes: ['id', 'description'],
       include: [
         {
           model: Package,
-          attributes: ['product'],
+          attributes: ['id', 'product'],
           include: [
             {
               model: Recipient,
@@ -104,26 +104,31 @@ class DeliveryProblemsController {
       return Error.BadRequest(res, 'Parâmetros inválidos.');
     }
 
-    const deliveryProblem = await DeliveryProblems.findAll({
-      where: {delivery_id: package_id},
-      include: { 
+    const deliveryProblem = await DeliveryProblems.findOne({
+      where: { delivery_id: package_id },
+      include: {
         model: Package,
-        attributes: ['id'],
-        include: { 
-          model: Deliveryman,
-          attributes: ['name', 'id'],
-          include: {
+        attributes: ['id', 'product'],
+        include: [
+          {
+            model: Deliveryman,
+            attributes: ['name', 'id'],
+          },
+          {
             model: Recipient,
-            attributes: ['enderecoReferencia']
-          }
-        }
+            attributes: ['enderecoReferencia'],
+          },
+        ],
       },
     });
 
     if (!deliveryProblem) {
       return Error.BadRequest(res, 'Encomenda não encontrada');
     }
-    const { product, name, enderecoReferencia } = deliveryProblem;
+
+    const { product } = deliveryProblem.Package;
+    const { name } = deliveryProblem.Deliveryman.name;
+    const { enderecoReferencia } = deliveryProblem.Recipient;
 
     const cancelPackage = await Package.findByPk(deliveryProblem.Package.id);
     cancelPackage.canceled_at = new Date();
@@ -140,7 +145,7 @@ class DeliveryProblemsController {
       enderecoReferencia,
     });
 
-    return res.json({id});
+    return res.json({ id });
   }
 }
 
