@@ -24,6 +24,7 @@ class Package extends Model {
     });
     this.belongsTo(models.Recipient, { foreignKey: 'recipient_id' });
     this.belongsTo(models.Deliveryman, { foreignKey: 'deliveryman_id' });
+    this.hasOne(models.DeliveryProblems, { foreignKey: 'delivery_id' });
   }
 }
 

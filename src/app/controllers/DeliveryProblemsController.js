@@ -46,7 +46,7 @@ class DeliveryProblemsController {
 
   async index(req, res) {
     const packageProblems = await DeliveryProblems.findAll({
-      attributes: ['id', 'description'],
+      attributes: ['delivery_id', 'description'],
       include: [
         {
           model: Package,
@@ -76,7 +76,7 @@ class DeliveryProblemsController {
 
     const packageProblems = await DeliveryProblems.findAll({
       where: { delivery_id: package_id },
-      attributes: ['description'],
+      attributes: ['delivery_id', 'description'],
       include: [
         {
           model: Package,
@@ -104,48 +104,55 @@ class DeliveryProblemsController {
       return Error.BadRequest(res, 'Parâmetros inválidos.');
     }
 
-    const deliveryProblem = await DeliveryProblems.findOne({
-      where: { delivery_id: package_id },
-      include: {
-        model: Package,
-        attributes: ['id', 'product'],
-        include: [
-          {
-            model: Deliveryman,
-            attributes: ['name', 'id'],
-          },
-          {
-            model: Recipient,
-            attributes: ['enderecoReferencia'],
-          },
-        ],
-      },
+    const packageProblem = await Package.findOne({
+      where: { id: package_id },
+      include: [
+        {
+          raw: true,
+          model: DeliveryProblems,
+          attributes: ['id', 'description'],
+        },
+        {
+          model: Deliveryman,
+          attributes: ['id', 'name', 'email'],
+        },
+        {
+          raw: true,
+          model: Recipient,
+          attributes: ['bairro', 'cidade', 'estado', 'referencia'],
+        },
+      ],
     });
 
-    if (!deliveryProblem) {
+    if (!packageProblem) {
       return Error.BadRequest(res, 'Encomenda não encontrada');
     }
 
-    const { product } = deliveryProblem.Package;
-    const { name } = deliveryProblem.Deliveryman.name;
-    const { enderecoReferencia } = deliveryProblem.Recipient;
+    if (packageProblem.canceled_at) {
+      return Error.BadRequest(res, 'Encomenda já foi cancelada anteriormente.');
+    }
 
-    const cancelPackage = await Package.findByPk(deliveryProblem.Package.id);
-    cancelPackage.canceled_at = new Date();
-    const { id } = await cancelPackage.save();
+    const { product } = packageProblem;
+    const { description: problem } = packageProblem.DeliveryProblem;
+    const { referencia } = packageProblem.Recipient;
+
+    const canceled_at = new Date();
+    packageProblem.canceled_at = canceled_at;
+    await packageProblem.save();
 
     await Notification.create({
       content: `Entrega cancelada`,
-      deliveryman_id: deliveryProblem.Deliveryman.id,
+      deliveryman_id: packageProblem.Deliveryman.id,
     });
 
     await Queue.add(CancelMail.key, {
-      name,
+      deliveryman: packageProblem.Deliveryman,
       product,
-      enderecoReferencia,
+      problem,
+      referencia,
     });
 
-    return res.json({ id });
+    return res.json();
   }
 }
 
