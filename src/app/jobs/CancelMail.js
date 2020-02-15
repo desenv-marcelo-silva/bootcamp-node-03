@@ -6,7 +6,7 @@ class CancelMail {
   }
 
   async handle({ data }) {
-    const { deliveryman, product, recipient } = data;
+    const { deliveryman, product, referencia, problem } = data;
     await Mail.sendMail({
       to: `to: ${deliveryman.email} <${deliveryman.email}>`,
       subject: 'Entrega cancelada',
@@ -14,7 +14,8 @@ class CancelMail {
       context: {
         deliveryman: deliveryman.name,
         product,
-        recipient,
+        referencia,
+        problem,
       },
     });
   }
