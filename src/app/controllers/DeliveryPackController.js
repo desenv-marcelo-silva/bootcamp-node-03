@@ -16,7 +16,7 @@ class DeliveryPackController {
 
     const deliveryman = await Deliveryman.findByPk(deliveryman_id);
     if (!deliveryman) {
-      return Error.BadRequest(res, 'Entregador inválido!');
+      return Error.BadRequest(res, 'Entregador não existe!');
     }
 
     const packagesDeliveryman = await Package.findAll({
@@ -39,7 +39,7 @@ class DeliveryPackController {
 
     const deliveryman = await Deliveryman.findByPk(deliveryman_id);
     if (!deliveryman) {
-      return Error.BadRequest(res, 'Entregador inválido!');
+      return Error.BadRequest(res, 'Entregador não existe!');
     }
 
     const packagesDelivered = await Package.findAll({
@@ -85,7 +85,7 @@ class DeliveryPackController {
 
     const deliveryman = await Deliveryman.findByPk(deliveryman_id);
     if (!deliveryman) {
-      return Error.BadRequest(res, 'Entregador inválido!');
+      return Error.BadRequest(res, 'Entregador não existe!');
     }
 
     const countDeliveries = await Package.count({
@@ -116,7 +116,7 @@ class DeliveryPackController {
     packageToDelivery.start_date = hoje;
 
     await packageToDelivery.save();
-    
+
     return res.json(packageToDelivery);
   }
 
@@ -134,7 +134,7 @@ class DeliveryPackController {
 
     const deliveryman = await Deliveryman.findByPk(deliveryman_id);
     if (!deliveryman) {
-      return Error.BadRequest(res, 'Entregador inválido!');
+      return Error.BadRequest(res, 'Entregador não existe.');
     }
 
     const packageDelivered = await Package.findByPk(package_id);
