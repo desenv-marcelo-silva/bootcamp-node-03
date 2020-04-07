@@ -18,13 +18,14 @@ class PackageController {
     if (!deliveryman_id) {
       return Error.BadRequest(res, 'Parametros inválidos.');
     }
-    const whereClause = {};
-    whereClause.deliveryman_id = deliveryman_id;
-    if (q) {
-      whereClause.product = { [Op.iLike]: `%${q}%` };
+
+    const filter = {};
+    filter.deliveryman_id = deliveryman_id;
+    if (q && q.trim() !== '') {
+      filter.product = { [Op.iLike]: `%${q.trim()}%` };
     }
     const packages = await Package.findAll({
-      where: whereClause,
+      where: filter,
       attributes: ['id', 'product', 'canceled_at', 'start_date', 'end_date'],
       order: ['created_at', 'product'],
       include: [
