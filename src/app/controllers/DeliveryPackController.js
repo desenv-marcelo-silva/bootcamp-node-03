@@ -19,12 +19,20 @@ class DeliveryPackController {
       return Error.BadRequest(res, 'Entregador não existe!');
     }
 
+    const filter = {};
+    const { q } = req.query;
+
+    if (q && q.trim() !== '') {
+      filter.name = { [Op.iLike]: `%${q}%` };
+    }
+
     const packagesDeliveryman = await Package.findAll({
       where: { deliveryman_id, canceled_at: null, end_date: null },
       attributes: ['id', 'product'],
       include: {
         model: Recipient,
         attributes: ['name', 'bairro', 'cidade'],
+        where: filter,
       },
     });
 
