@@ -1,4 +1,5 @@
 import * as Yup from 'yup';
+import { Op } from 'sequelize';
 
 import * as Error from '../util/Error';
 
@@ -12,13 +13,18 @@ import Queue from '../../lib/Queue';
 class PackageController {
   async index(req, res) {
     const { deliverymanId: deliveryman_id } = req.params;
+    const { q } = req.query;
 
     if (!deliveryman_id) {
       return Error.BadRequest(res, 'Parametros inválidos.');
     }
-
+    const whereClause = {};
+    whereClause.deliveryman_id = deliveryman_id;
+    if (q) {
+      whereClause.product = { [Op.iLike]: `%${q}%` };
+    }
     const packages = await Package.findAll({
-      where: { deliveryman_id },
+      where: whereClause,
       attributes: ['id', 'product', 'canceled_at', 'start_date', 'end_date'],
       order: ['created_at', 'product'],
       include: [
