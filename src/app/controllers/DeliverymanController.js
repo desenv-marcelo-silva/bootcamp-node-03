@@ -1,4 +1,5 @@
 import * as Yup from 'yup';
+import { Op } from 'sequelize';
 
 import * as Error from '../util/Error';
 import Deliveryman from '../models/Deliveryman';
@@ -6,9 +7,16 @@ import File from '../models/File';
 
 class DeliverymanController {
   async index(req, res) {
+    const { q } = req.query;
+    const filter = {};
+    if (q && q.trim() !== '') {
+      filter.name = { [Op.iLike]: `%${q.trim()}%` };
+    }
+
     const deliveryman = await Deliveryman.findAll({
       attributes: ['id', 'name', 'email'],
       order: ['name'],
+      where: filter,
       include: {
         model: File,
         as: 'deliveryman_avatar',
