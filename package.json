@@ -6,9 +6,10 @@
   "author": "Marcelo Silva <desenv.marcelo.silva@gmail.com>",
   "license": "MIT",
   "scripts": {
-    "dev": "nodemon src/server.js",
+    "server": "nodemon src/server.js",
+    "server:queue": "nodemon src/queue.js",
     "dev:debug": "nodemon --inspect src/server.js",
-    "queue": "nodemon src/queue.js"
+    "server:run": "concurrently npm:server npm:server:queue"
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",
@@ -31,6 +32,7 @@
     "yup": "^0.28.1"
   },
   "devDependencies": {
+    "concurrently": "^5.1.0",
     "eslint": "^6.8.0",
     "eslint-config-airbnb-base": "^14.0.0",
     "eslint-config-prettier": "^6.10.0",
