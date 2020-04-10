@@ -8,6 +8,21 @@ class Package extends Model {
         canceled_at: Sequelize.DATE,
         start_date: Sequelize.DATE,
         end_date: Sequelize.DATE,
+        signature_id: Sequelize.INTEGER,
+        status: {
+          type: Sequelize.VIRTUAL,
+          get() {
+            if (this.canceled_at) {
+              return 'Cancelada';
+            } else if (this.end_date && this.signature_id) {
+              return 'Entregue';
+            } else if (this.start_date && !this.end_date) {
+              return 'Retirada';
+            } else {
+              return 'Pendente';
+            }
+          },
+        },
       },
       {
         sequelize,

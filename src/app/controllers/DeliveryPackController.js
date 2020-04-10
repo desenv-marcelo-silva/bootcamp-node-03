@@ -8,6 +8,46 @@ import Recipient from '../models/Recipient';
 import * as Error from '../util/Error';
 
 class DeliveryPackController {
+  async index(req, res) {
+    const filter = {};
+    const { q } = req.query;
+
+    if (q && q.trim() !== '') {
+      filter.product = { [Op.iLike]: `%${q}%` };
+    }
+
+    const packages = await Package.findAll({
+      attributes: [
+        'id',
+        'product',
+        'start_date',
+        'canceled_at',
+        'end_date',
+        'signature_id',
+        'status',
+      ],
+      where: filter,
+      include: [
+        {
+          model: Recipient,
+          attributes: [
+            'name',
+            'bairro',
+            'cidade',
+            'estado',
+            'regiao_referencia',
+          ],
+        },
+        {
+          model: Deliveryman,
+          attributes: ['name'],
+        },
+      ],
+    });
+
+    return res.json(packages);
+  }
+
   async deliveries(req, res) {
     const { deliveryman_id } = req.params;
     if (!deliveryman_id) {

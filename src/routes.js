@@ -20,6 +20,9 @@ const upload = multer(multerConfig);
 
 routes.post('/users', UserController.store);
 routes.post('/sessions', SessionController.store);
+
+// Entregas
+routes.get('/deliverypacks/deliveries', DeliveryPackController.index);
 routes.get(
   '/deliverypacks/:deliveryman_id/deliveries',
   DeliveryPackController.deliveries
@@ -40,6 +43,7 @@ routes.post(
   DeliveryPackController.delivery
 );
 
+// Problema nas entregas
 routes.post(
   '/deliveryproblems/:deliveryman_id/problems',
   DeliveryProblemsController.store
@@ -64,15 +68,19 @@ routes.put('/users', UserController.update);
 routes.post('/files', upload.single('file'), FileController.store);
 
 routes.use(adminMiddleware);
+
+// Destinatários
 routes.get('/recipients', RecipientController.index);
 routes.post('/recipients', RecipientController.store);
 routes.put('/recipients', RecipientController.update);
 
+// Entregadores
 routes.get('/deliveryman', DeliverymanController.index);
 routes.post('/deliveryman', DeliverymanController.store);
 routes.put('/deliveryman/:deliverymanId', DeliverymanController.update);
 routes.delete('/deliveryman/:deliverymanId', DeliverymanController.delete);
 
+// Entregas
 routes.get('/packages/:deliverymanId', PackageController.index);
 routes.post('/packages', PackageController.store);
 routes.put('/packages', PackageController.update);
