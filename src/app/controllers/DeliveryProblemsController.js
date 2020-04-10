@@ -1,3 +1,4 @@
+import { Op } from 'sequelize';
 import * as Yup from 'yup';
 
 import Package from '../models/Package';
@@ -45,22 +46,21 @@ class DeliveryProblemsController {
   }
 
   async index(req, res) {
-    const packageProblems = await DeliveryProblems.findAll({
-      attributes: ['delivery_id', 'description'],
+    const packageProblems = await Package.findAll({
+      attributes: ['id', 'product'],
       include: [
         {
-          model: Package,
-          attributes: ['id', 'product'],
-          include: [
-            {
-              model: Recipient,
-              attributes: ['name'],
-            },
-            {
-              model: Deliveryman,
-              attributes: ['name'],
-            },
-          ],
+          model: DeliveryProblems,
+          attributes: ['id', 'description'],
+          where: { id: { [Op.not]: null } },
+        },
+        {
+          model: Recipient,
+          attributes: ['name'],
+        },
+        {
+          model: Deliveryman,
+          attributes: ['name'],
         },
       ],
     });
@@ -74,27 +74,25 @@ class DeliveryProblemsController {
       return Error.BadRequest(res, 'Parâmetros inválidos.');
     }
 
-    const packageProblems = await DeliveryProblems.findAll({
-      where: { delivery_id: package_id },
-      attributes: ['delivery_id', 'description'],
+    const packageProblems = await Package.findAll({
+      attributes: ['id', 'product'],
+      where: { id: package_id },
       include: [
         {
-          model: Package,
-          attributes: ['product'],
-          include: [
-            {
-              model: Recipient,
-              attributes: ['name'],
-            },
-            {
-              model: Deliveryman,
-              attributes: ['name'],
-            },
-          ],
+          model: DeliveryProblems,
+          attributes: ['id', 'description'],
+          where: { id: { [Op.not]: null } },
+        },
+        {
+          model: Recipient,
+          attributes: ['name'],
+        },
+        {
+          model: Deliveryman,
+          attributes: ['name'],
         },
       ],
     });
-
     return res.json(packageProblems);
   }
 
@@ -119,7 +117,7 @@ class DeliveryProblemsController {
         {
           raw: true,
           model: Recipient,
-          attributes: ['bairro', 'cidade', 'estado', 'referencia'],
+          attributes: ['bairro', 'cidade', 'estado', 'regiao_referencia'],
         },
       ],
     });
@@ -134,7 +132,7 @@ class DeliveryProblemsController {
 
     const { product } = packageProblem;
     const { description: problem } = packageProblem.DeliveryProblem;
-    const { referencia } = packageProblem.Recipient;
+    const { regiao_referencia } = packageProblem.Recipient;
 
     const canceled_at = new Date();
     packageProblem.canceled_at = canceled_at;
@@ -149,7 +147,7 @@ class DeliveryProblemsController {
       deliveryman: packageProblem.Deliveryman,
       product,
       problem,
-      referencia,
+      regiao_referencia,
     });
 
     return res.json();
