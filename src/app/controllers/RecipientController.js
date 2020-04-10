@@ -1,3 +1,5 @@
+import { Op } from 'sequelize';
+
 import * as Yup from 'yup';
 import Recipient from '../models/Recipient';
 
@@ -6,6 +8,18 @@ import * as Error from '../util/Error';
 const CEPRegex = /^[0-9]{2}.[0-9]{3}-[0-9]{3}$/;
 
 class RecipientController {
+  async index(req, res) {
+    const filter = {};
+    const { q } = req.query;
+
+    if (q && q.trim() !== '') {
+      filter.name = { [Op.iLike]: `%${q}%` };
+    }
+
+    const recipients = await Recipient.findAll({ where: filter });
+    return res.json(recipients);
+  }
+
   async store(req, res) {
     const schema = Yup.object().shape({
       name: Yup.string().required(),

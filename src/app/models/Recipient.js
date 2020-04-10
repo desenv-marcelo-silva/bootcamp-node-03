@@ -12,7 +12,7 @@ class Recipient extends Model {
         estado: Sequelize.STRING,
         cidade: Sequelize.STRING,
         cep: Sequelize.STRING,
-        referencia: {
+        regiao_referencia: {
           type: Sequelize.VIRTUAL,
           get() {
             return `${this.bairro} - ${this.cidade}/${this.estado}`;
