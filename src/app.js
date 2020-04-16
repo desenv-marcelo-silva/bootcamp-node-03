@@ -3,6 +3,7 @@ import 'dotenv/config';
 import express from 'express';
 import path from 'path';
 import Youch from 'youch';
+import cors from 'cors';
 
 import 'express-async-errors';
 
@@ -19,6 +20,7 @@ class App {
   }
 
   middlewares() {
+    this.server.use(cors({ url: 'https://localhost:3000' }));
     this.server.use(express.json());
     this.server.use(
       '/files',
