@@ -4,6 +4,7 @@ import { startOfDay, endOfDay, isBefore, isAfter, startOfHour } from 'date-fns';
 import Deliveryman from '../models/Deliveryman';
 import Package from '../models/Package';
 import Recipient from '../models/Recipient';
+import File from '../models/File';
 
 import * as Error from '../util/Error';
 
@@ -41,6 +42,11 @@ class DeliveryPackController {
         {
           model: Deliveryman,
           attributes: ['name'],
+          include: {
+            model: File,
+            as: 'deliveryman_avatar',
+            attributes: ['id', 'path', 'url'],
+          },
         },
       ],
     });
