@@ -1,5 +1,5 @@
 #!/bin/bash
-service mongod stop
+#service mongod stop
 docker start database
 docker start mongobarber
 docker start redisbarber
