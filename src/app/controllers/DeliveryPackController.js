@@ -214,6 +214,50 @@ class DeliveryPackController {
 
     return res.json(packageDelivered);
   }
+
+  async deliveryInfo(req, res) {
+    const { deliveryman_id, package_id } = req.params;
+
+    if (!deliveryman_id) {
+      return Error.BadRequest(res, 'Entregador inválido!');
+    }
+
+    if (!package_id) {
+      return Error.BadRequest(res, 'Parâmetros inválidos.');
+    }
+
+    const deliveryman = await Deliveryman.findByPk(deliveryman_id);
+    if (!deliveryman) {
+      return Error.BadRequest(res, 'Entregador não existe.');
+    }
+
+    const packageDelivered = await Package.findByPk(package_id);
+    if (!packageDelivered) {
+      return Error.BadRequest(res, 'Entrega não existe na base.');
+    }
+
+    if (packageDelivered.deliveryman_id !== Number(deliveryman_id)) {
+      return Error.BadRequest(res, 'Entrega não pertence a este entregador.');
+    }
+
+    const packInfo = await Package.findOne({
+      attributes: ['start_date', 'end_date', 'canceled_at', 'signature_id'],
+      where: { id: package_id },
+      include: [
+        {
+          model: Recipient,
+          attributes: ['rua', 'numero', 'bairro', 'cidade', 'estado', 'cep'],
+        },
+        {
+          model: File,
+          as: 'signature',
+          attributes: ['id', 'name', 'path', 'url'],
+        },
+      ],
+    });
+
+    return res.json(packInfo);
+  }
 }
 
 export default new DeliveryPackController();

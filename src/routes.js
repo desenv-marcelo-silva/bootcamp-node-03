@@ -69,6 +69,12 @@ routes.post('/files', upload.single('file'), FileController.store);
 
 routes.use(adminMiddleware);
 
+// Entregas
+routes.get(
+  '/deliverypacks/:deliveryman_id/package/:package_id',
+  DeliveryPackController.deliveryInfo
+);
+
 // Destinatários
 routes.get('/recipients', RecipientController.index);
 routes.post('/recipients', RecipientController.store);
