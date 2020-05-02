@@ -120,17 +120,21 @@ class DeliveryPackController {
       return Error.BadRequest(res, 'Parâmetros inválidos.');
     }
 
-    const hoje = new Date();
-    const agora = hoje.getHours();
+    const agora = new Date();
+    const dia = agora.getDate();
+    const mes = agora.getMonth();
+    const ano = agora.getFullYear();
+    const inicioExpediente = new Date(ano, mes, dia, 8, 0, 0);
+    const finalExpediente = new Date(ano, mes, dia, 18, 0, 0);
 
-    if (isBefore(agora, startOfHour(hoje.setHours(8)))) {
+    if (isBefore(agora, inicioExpediente)) {
       return Error.BadRequest(
         res,
         'Retiradas podem ser feitas somente a partir das 8h.'
       );
     }
 
-    if (isAfter(startOfHour(hoje.setHours(18)), agora)) {
+    if (isAfter(agora, finalExpediente)) {
       return Error.BadRequest(
         res,
         'Retiradas podem ser feitas somente até às 18h.'
@@ -145,7 +149,7 @@ class DeliveryPackController {
     const countDeliveries = await Package.count({
       where: {
         deliveryman_id,
-        start_date: { [Op.gte]: startOfDay(hoje), [Op.lte]: endOfDay(hoje) },
+        start_date: { [Op.gte]: startOfDay(agora), [Op.lte]: endOfDay(agora) },
       },
     });
     if (countDeliveries + 1 > 5) {
@@ -160,14 +164,11 @@ class DeliveryPackController {
       return Error.BadRequest(res, 'Entrega não existe na base.');
     }
 
-    if (packageToDelivery.deliveryman_id !== deliveryman_id) {
-      return Error.BadRequest(
-        res,
-        'Retirada não permitida para este entregador.'
-      );
+    if (packageToDelivery.deliveryman_id !== parseInt(deliveryman_id, 10)) {
+      return Error.BadRequest(res, packageToDelivery);
     }
 
-    packageToDelivery.start_date = hoje;
+    packageToDelivery.start_date = agora;
 
     await packageToDelivery.save();
 
