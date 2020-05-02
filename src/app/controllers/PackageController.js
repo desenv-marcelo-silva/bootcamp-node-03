@@ -133,6 +133,23 @@ class PackageController {
 
     return res.json({});
   }
+
+  async get(req, res) {
+    const { id } = req.params;
+    if (!id) {
+      return Error.BadRequest(res, 'Encomenda inválida.');
+    }
+
+    const pack = await Package.findByPk(id);
+    if (!pack) {
+      return Error.BadRequest(
+        res,
+        'Encomenda não encontrada na base de dados.'
+      );
+    }
+
+    return res.json(pack);
+  }
 }
 
 export default new PackageController();

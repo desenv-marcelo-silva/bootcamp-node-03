@@ -88,6 +88,7 @@ routes.delete('/deliveryman/:deliverymanId', DeliverymanController.delete);
 
 // Entregas
 routes.get('/packages/:deliverymanId', PackageController.index);
+routes.get('/packages/package/:id', PackageController.get);
 routes.post('/packages', PackageController.store);
 routes.put('/packages', PackageController.update);
 routes.delete('/packages/:id', PackageController.delete);
