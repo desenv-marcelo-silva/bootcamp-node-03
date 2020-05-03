@@ -28,6 +28,7 @@ class DeliveryPackController {
         'status',
       ],
       where: filter,
+      order: ['id'],
       include: [
         {
           model: Recipient,
