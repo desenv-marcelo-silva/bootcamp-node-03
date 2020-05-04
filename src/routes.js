@@ -82,6 +82,7 @@ routes.put('/recipients', RecipientController.update);
 
 // Entregadores
 routes.get('/deliveryman', DeliverymanController.index);
+routes.get('/deliveryman/:deliverymanId', DeliverymanController.get);
 routes.post('/deliveryman', DeliverymanController.store);
 routes.put('/deliveryman/:deliverymanId', DeliverymanController.update);
 routes.delete('/deliveryman/:deliverymanId', DeliverymanController.delete);

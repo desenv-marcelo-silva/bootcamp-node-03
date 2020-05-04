@@ -99,6 +99,22 @@ class DeliverymanController {
 
     return res.json({});
   }
+
+  async get(req, res) {
+    const { deliverymanId } = req.params;
+
+    if (!deliverymanId) {
+      Error.BadRequest(res, 'Dados inválidos.');
+    }
+
+    const deliveryman = await Deliveryman.findByPk(deliverymanId);
+
+    if (!deliveryman) {
+      return Error.BadRequest(res, 'Entregador não existe na base de dados.');
+    }
+
+    return res.json(deliveryman);
+  }
 }
 
 export default new DeliverymanController();
