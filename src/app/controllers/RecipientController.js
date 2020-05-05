@@ -22,7 +22,10 @@ class RecipientController {
       }
     }
 
-    const recipients = await Recipient.findAll({ where: filter });
+    const recipients = await Recipient.findAll({
+      where: filter,
+      order: ['id'],
+    });
     return res.json(recipients);
   }
 
@@ -60,6 +63,7 @@ class RecipientController {
       bairro: Yup.string().required(),
       cidade: Yup.string().required(),
       estado: Yup.string().required(),
+      complemento: Yup.string(),
       cep: Yup.string().matches(CEPRegex),
     });
 
