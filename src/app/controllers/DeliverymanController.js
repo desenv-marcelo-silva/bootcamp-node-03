@@ -7,10 +7,16 @@ import File from '../models/File';
 
 class DeliverymanController {
   async index(req, res) {
-    const { q } = req.query;
     const filter = {};
-    if (q && q.trim() !== '') {
-      filter.name = { [Op.iLike]: `%${q.trim()}%` };
+    const { deliverymanId } = req.params;
+    if (deliverymanId && parseInt(deliverymanId, 10) > 0) {
+      filter.id = deliverymanId;
+    } else {
+      const { q } = req.query;
+
+      if (q && q.trim() !== '') {
+        filter.name = { [Op.iLike]: `%${q.trim()}%` };
+      }
     }
 
     const deliveryman = await Deliveryman.findAll({
@@ -98,22 +104,6 @@ class DeliverymanController {
     await deliveryman.destroy();
 
     return res.json({});
-  }
-
-  async get(req, res) {
-    const { deliverymanId } = req.params;
-
-    if (!deliverymanId) {
-      Error.BadRequest(res, 'Dados inválidos.');
-    }
-
-    const deliveryman = await Deliveryman.findByPk(deliverymanId);
-
-    if (!deliveryman) {
-      return Error.BadRequest(res, 'Entregador não existe na base de dados.');
-    }
-
-    return res.json(deliveryman);
   }
 }
 

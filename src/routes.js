@@ -76,13 +76,12 @@ routes.get(
 );
 
 // Destinatários
-routes.get('/recipients', RecipientController.index);
+routes.get('/recipients/:idRecipient?', RecipientController.index);
 routes.post('/recipients', RecipientController.store);
 routes.put('/recipients', RecipientController.update);
 
 // Entregadores
-routes.get('/deliveryman', DeliverymanController.index);
-routes.get('/deliveryman/:deliverymanId', DeliverymanController.get);
+routes.get('/deliveryman/:deliverymanId?', DeliverymanController.index);
 routes.post('/deliveryman', DeliverymanController.store);
 routes.put('/deliveryman/:deliverymanId', DeliverymanController.update);
 routes.delete('/deliveryman/:deliverymanId', DeliverymanController.delete);
