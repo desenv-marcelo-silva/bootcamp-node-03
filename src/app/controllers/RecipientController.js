@@ -10,10 +10,16 @@ const CEPRegex = /^[0-9]{2}.[0-9]{3}-[0-9]{3}$/;
 class RecipientController {
   async index(req, res) {
     const filter = {};
-    const { q } = req.query;
+    const { idRecipient } = req.params;
 
-    if (q && q.trim() !== '') {
-      filter.name = { [Op.iLike]: `%${q}%` };
+    if (idRecipient && parseInt(idRecipient, 10) > 0) {
+      filter.id = idRecipient;
+    } else {
+      const { q } = req.query;
+
+      if (q && q.trim() !== '') {
+        filter.name = { [Op.iLike]: `%${q}%` };
+      }
     }
 
     const recipients = await Recipient.findAll({ where: filter });
