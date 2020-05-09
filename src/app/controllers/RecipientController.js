@@ -80,6 +80,24 @@ class RecipientController {
 
     return res.json({ id, name });
   }
+
+  async delete(req, res) {
+    const { idRecipient } = req.params;
+
+    if (!idRecipient) {
+      Error.BadRequest(res, 'Dados inválidos.');
+    }
+
+    const recipient = await Recipient.findByPk(idRecipient);
+
+    if (!recipient) {
+      return Error.BadRequest(res, 'Destinatário não existe na base de dados.');
+    }
+
+    await recipient.destroy();
+
+    return res.json({});
+  }
 }
 
 export default new RecipientController();
